@@ -1,0 +1,28 @@
+services:
+  orders-app:
+    build:
+      context: docker/app
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+  orders-api:
+    build:
+      context: docker/api
+      dockerfile: Dockerfile
+    ports:
+      - "9005:9005"
+    volumes:
+      - .:/var/www
+    depends_on:
+      - db
+  orders-db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: ordersdb
+      MYSQL_ROOT_PASSWORD: orderspassword
+    ports:
+      - "3306:3306"
