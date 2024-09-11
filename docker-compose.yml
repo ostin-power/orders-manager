@@ -1,28 +1,44 @@
 services:
-  orders-app:
+  app:
     build:
-      context: docker/app
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/app/Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:8000"
     volumes:
-      - .:/var/www
+      - ./src/orders-api:/var/www
     depends_on:
       - db
-  orders-api:
+    networks:
+      - private
+  api:
     build:
-      context: docker/api
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/api/Dockerfile
     ports:
       - "9005:9005"
     volumes:
-      - .:/var/www
+      - ./src/orders-api:/var/www
     depends_on:
       - db
-  orders-db:
-    image: mysql:5.7
+    networks:
+      - private
+  db:
+    image: mysql:8.0
     environment:
-      MYSQL_DATABASE: ordersdb
-      MYSQL_ROOT_PASSWORD: orderspassword
+      - MYSQL_DATABASE=ordersdb
+      - MYSQL_ROOT_PASSWORD=orderspassword
+      - MYSQL_USER=admin
+      - MYSQL_PASSWORD=orderspassword
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - private
+      
+networks:
+  private:
+
+volumes:
+  db_data:

@@ -1,8 +1,8 @@
-FROM php:8.0-fpm
+FROM php:8.2-fpm
 WORKDIR /var/www
 
 #Project files
-COPY ../../src/orders-api/ .
+COPY ./src/orders-api/ .
 
 #Install libraries
 RUN apt-get update && apt-get install -y libpng-dev zip unzip git curl
