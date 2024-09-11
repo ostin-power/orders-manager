@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Interfaces\OrderRepositoryInterface;
+use App\Interfaces\ProductRepositoryInterface;
 
 class OrderController extends Controller {
 
@@ -102,8 +103,8 @@ class OrderController extends Controller {
      */
     public function index(Request $request) {
         return response()->json([
-            'code'   => 200,
-            'orders' => $this->_orderRepository->index($request)
+            'code'      => 200,
+            'orders'    => $this->_orderRepository->index($request)
         ]);
     }
 

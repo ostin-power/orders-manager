@@ -2,10 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
-
-// Route::get('/', function () {
-//     return "api";
-// });
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +17,7 @@ Route::group(['prefix' => 'v1'], function() {
     /**
      * Get Routes
      */
+    Route::get('/products', [ProductController::class, 'index']);
     Route::get('/orders', [OrderController::class, 'index']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
 
