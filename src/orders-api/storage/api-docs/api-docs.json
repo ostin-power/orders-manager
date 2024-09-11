@@ -9,13 +9,13 @@
         "version": "1.0.0"
     },
     "paths": {
-        "/orders": {
+        "/api/v1/orders": {
             "get": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Get a list of orders with optional filters",
-                "operationId": "325fd3d55bbe9bb39645269928fa4983",
+                "operationId": "2fd056a400bd274a5b2278e92a8ed010",
                 "parameters": [
                     {
                         "name": "name",
@@ -182,7 +182,7 @@
                     "Orders"
                 ],
                 "summary": "Store a newly created order in the database along with its products. Request expects an array of products with quantity",
-                "operationId": "445bab4f7dc9ea6fcd54f286c0209478",
+                "operationId": "f92c2f898a00f407e1efa0fd23c93b24",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -379,13 +379,13 @@
                 }
             }
         },
-        "/orders/{order_id}": {
+        "/api/v1/orders/{order_id}": {
             "get": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Display the specified order along with its associated products by ID",
-                "operationId": "14294e8d1623e40747a2d4f3af0f2182",
+                "operationId": "a3fe59fe0b2fb80deebd47bf5cce268f",
                 "parameters": [
                     {
                         "name": "order_id",
@@ -537,7 +537,7 @@
                     "Orders"
                 ],
                 "summary": "Update the specified order and its associated products. Request expects an array of products with quantity.",
-                "operationId": "7497fb0b1cdeaa4ec832b55b902c466a",
+                "operationId": "bada0467178ebb669f5670b462f30258",
                 "parameters": [
                     {
                         "name": "order_id",
@@ -769,7 +769,7 @@
                     "Orders"
                 ],
                 "summary": "Remove the specified order from the database along with its product associations.",
-                "operationId": "5a6906a07de1af5d080d40d98b81a720",
+                "operationId": "400e204d9ae69897926bd314b6db9245",
                 "parameters": [
                     {
                         "name": "order_id",

@@ -23,7 +23,7 @@ class OrderController extends Controller {
 
     /**
      * @OA\Get(
-     *     path="/orders",
+     *     path="/api/v1/orders",
      *     summary="Get a list of orders with optional filters",
      *     tags={"Orders"},
      *     @OA\Parameter(
@@ -109,7 +109,7 @@ class OrderController extends Controller {
 
     /**
      * @OA\Post(
-     *     path="/orders",
+     *     path="/api/v1/orders",
      *     summary="Store a newly created order in the database along with its products. Request expects an array of products with quantity",
      *     tags={"Orders"},
      *     @OA\RequestBody(
@@ -118,7 +118,7 @@ class OrderController extends Controller {
      *             type="object",
      *             @OA\Property(property="name", type="string", description="The name of the order", example="New Order Name"),
      *             @OA\Property(property="description", type="string", description="Description of the order", example="Description of the new order."),
-     *             @OA\Property(property="order_date", type="string", format="date", description="The date of the order", example="2024-09-15"),
+     *             @OA\Property(property="date", type="string", format="date", description="The date of the order", example="2024-09-15"),
      *             @OA\Property(
      *                 property="products",
      *                 type="array",
@@ -195,7 +195,7 @@ class OrderController extends Controller {
         $request->validate([
             'name'                  => 'required|string|max:200',
             'description'           => 'required|string',
-            'order_date'            => 'required|date',
+            'date'                  => 'required|date',
             'products'              => 'required|array',
             'products.*.product_id' => 'required|exists:products,id',
             'products.*.quantity'   => 'required|integer|min:1',
@@ -204,7 +204,7 @@ class OrderController extends Controller {
         $result = $this->_orderRepository->store(
             $request->input('name'),
             $request->input('description'),
-            $request->input('order_date'),
+            $request->input('date'),
             $request->products
         );
 
@@ -220,7 +220,7 @@ class OrderController extends Controller {
 
     /**
      * @OA\Get(
-     *     path="/orders/{order_id}",
+     *     path="/api/v1/orders/{order_id}",
      *     summary="Display the specified order along with its associated products by ID",
      *     tags={"Orders"},
      *     @OA\Parameter(
@@ -298,7 +298,7 @@ class OrderController extends Controller {
 
     /**
      * @OA\Put(
-     *     path="/orders/{order_id}",
+     *     path="/api/v1/orders/{order_id}",
      *     summary="Update the specified order and its associated products. Request expects an array of products with quantity.",
      *     tags={"Orders"},
      *     @OA\Parameter(
@@ -400,7 +400,7 @@ class OrderController extends Controller {
         $request->validate([
             'name'                  => 'sometimes|required|string|max:255',
             'description'           => 'sometimes|required|string',
-            'order_date'            => 'sometimes|required|date',
+            'date'                  => 'sometimes|required|date',
             'products'              => 'sometimes|required|array',
             'products.*.product_id' => 'required_with:products|exists:products,id',
             'products.*.quantity'   => 'required_with:products|integer|min:1',
@@ -417,7 +417,7 @@ class OrderController extends Controller {
             $order_id,
             $request->input('name'),
             $request->input('description'),
-            $request->input('order_date'),
+            $request->input('date'),
             $products
         );
 
@@ -437,7 +437,7 @@ class OrderController extends Controller {
 
     /**
      * @OA\Delete(
-     *     path="/orders/{order_id}",
+     *     path="/api/v1/orders/{order_id}",
      *     summary="Remove the specified order from the database along with its product associations.",
      *     tags={"Orders"},
      *     @OA\Parameter(

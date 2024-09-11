@@ -23,7 +23,7 @@ class OrderRepository implements OrderRepositoryInterface {
             $query->where('description', 'like', '%' . $request->description . '%');
         })
         ->when($request->has('date'), function ($query) use ($request) {
-            $query->whereDate('date', $request->order_date);
+            $query->whereDate('date', $request->date);
         })
         ->get();
 
