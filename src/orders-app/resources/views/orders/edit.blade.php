@@ -16,5 +16,4 @@
         <input type="date" id="date" name="date" class="form-control" value="{{ old('date', $order->date) }}" required>
     </div>
     <button type="submit" class="btn btn-main">Update Order</button>
-    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 </form>

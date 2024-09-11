@@ -15,9 +15,9 @@
                 <input type="date" name="date" class="form-control" value="{{ request('date') }}">
             </div>
             <div class="col-md-3 d-flex align-items-center justify-content-between">
-                <button type="submit" class="btn btn-main">Filter</button>
-                <a href="{{ route('orders.index') }}" class="btn btn-secondary">Clear</a>
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#insertOrderModal">Insert</button>
+                <button type="submit" class="btn btn-main"><i class="fa-solid fa-filter"></i> Filter</button>
+                <a href="{{ route('orders.index') }}" class="btn btn-secondary"><i class="fa-solid fa-filter-circle-xmark"></i> Clear</a>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insertOrderModal"><i class="fa-solid fa-plus"></i> Insert</button>
             </div>
         </div>
     </form>
@@ -40,83 +40,36 @@
                     <td>{{ $order->description }}</td>
                     <td>{{ $order->date }}</td>
                     <td>
-                        <button class="btn btn-info btn-sm show-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.show', $order->id) }}">View</button>
-                        <button class="btn btn-warning btn-sm edit-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.edit', $order->id) }}">Edit</button>
-                        <form action="{{ route('orders.delete', $order->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <button class="btn btn-info btn-sm show-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.show', $order->id) }}"><i class="fa-solid fa-circle-info"></i> View</button>
+                            <button class="btn btn-secondary btn-sm edit-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.edit', $order->id) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                            <form action="{{ route('orders.delete', $order->id) }}" method="POST" class="d-inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash"></i> Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="orderModalContent">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="insertOrderModal" tabindex="-1" role="dialog" aria-labelledby="insertOrderModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="insertOrderModalLabel">Insert New Order</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="insertOrderForm" method="POST" action="{{ route('orders.store') }}">
-                        @csrf
-                        <div class="form-group">
-                            <label for="name">Order Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Order Description</label>
-                            <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="date">Date</label>
-                            <input type="date" id="date" name="date" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="products">Select Products</label>
-                            <div id="products-container">
-                                @foreach($products as $product)
-                                    <div class="form-row product-row">
-                                        <div class="col-md-8">
-                                            <label for="product-{{ $product->id }}">{{ $product->name }}</label>
-                                            <input type="hidden" name="products[{{ $product->id }}][id]" value="{{ $product->id }}">
-                                            <input type="number" id="quantity-{{ $product->id }}" name="products[{{ $product->id }}][quantity]" class="form-control" placeholder="Quantity" min="1">
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-main">Insert Order</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('components.show-edit-order-modal')
+    @include('components.insert-order-modal', ['products' => $products])
 
 @endsection
 
 @section('scripts')
     <script>
+        function showEditMode() {
+            document.getElementById('editFooter').classList.remove('d-none');
+        }
+
+        function hideEditMode() {
+            document.getElementById('editFooter').classList.add('d-none');
+        }
+
         $(document).ready(function() {
             // Show Modal
             $(document).on('click', '.show-modal', function() {
