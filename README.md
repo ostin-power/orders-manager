@@ -28,7 +28,7 @@ System to monitor and manage daily user orders
 - `DELETE /api/v1/orders/{order}`: Delete an order.
 
 ### Swagger documentation
-For more details on the API Endopoints, once your containers are up&running, go to : http://localhost:9005/api/documentation
+For more details on backend API Endopoints, once your containers are up&running, go to : http://localhost:9005/api/documentation
 
 You can also try it out from Swagger interface: this will simplify your tests or give a powerful instrument to use api without the Frontend application.
 

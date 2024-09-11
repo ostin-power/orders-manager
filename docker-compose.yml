@@ -2,19 +2,17 @@ services:
   app:
     build:
       context: .
-      dockerfile: docker/app/Dockerfile
+      dockerfile: src/orders-app/Dockerfile
     ports:
       - "8080:8000"
     volumes:
-      - ./src/orders-api:/var/www
-    depends_on:
-      - db
+      - ./src/orders-app:/var/www
     networks:
       - private
   api:
     build:
       context: .
-      dockerfile: docker/api/Dockerfile
+      dockerfile: src/orders-api/Dockerfile
     ports:
       - "9005:9005"
     volumes:

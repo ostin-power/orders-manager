@@ -139,7 +139,6 @@
             // Edit Modal
             $(document).on('click', '.edit-modal', function() {
                 var url = $(this).data('url');
-                console.log('Fetching URL for edit:', url);
 
                 $.ajax({
                     url: url,
@@ -157,19 +156,15 @@
 
             // Insert Modal
             $('#insertOrderForm').on('submit', function(e) {
-                e.preventDefault(); // Prevent the default form submission
-
-                var formData = $(this).serialize(); // Serialize form data
+                e.preventDefault();
+                var formData = $(this).serialize();
 
                 $.ajax({
-                    url: "{{ route('orders.store') }}", // Adjust to your store route
+                    url: "{{ route('orders.store') }}",
                     type: 'POST',
                     data: formData,
                     success: function(response) {
-                        // Close the modal
                         $('#insertOrderModal').modal('hide');
-
-                        // Clear the form
                         $('#insertOrderForm')[0].reset();
 
                         // Optionally, refresh the order list or append the new order to the table

@@ -2,7 +2,7 @@ FROM php:8.2-fpm
 WORKDIR /var/www
 
 #Project files
-COPY ./src/orders-api/ .
+COPY ./src/orders-app .
 
 #Install libraries
 RUN apt-get update && apt-get install -y libpng-dev zip unzip git curl
@@ -13,4 +13,4 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install
 
 #Startup
-CMD php artisan serve --host=0.0.0.0 --port=9005
+CMD php artisan serve --host=0.0.0.0 --port=8000
