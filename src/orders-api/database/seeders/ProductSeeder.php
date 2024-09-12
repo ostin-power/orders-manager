@@ -19,7 +19,7 @@ class ProductSeeder extends Seeder
         DB::table('products')->delete();
 
         // Create products
-        for ($i = 0; $i < 30; $i++) {
+        for ($i = 0; $i < 4; $i++) {
             Product::create([
                 'name' => $faker->word,
                 'price' => $faker->randomFloat(2, 1, 100)
