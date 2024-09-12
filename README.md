@@ -28,15 +28,41 @@ System to monitor and manage daily user orders.
 - `DELETE /api/v1/orders/{order}`: Delete an order.
 
 ## Swagger documentation
-For more details on backend API Endopoints, once your containers are up&running, go to : http://localhost:9005/api/documentation
+For more details on backend API Endopoints, once your containers are up&running, go to :
+```bash
+http://localhost:9005/api/documentation
+```
 
 You can also try it out from Swagger interface: this will simplify your tests or give a powerful instrument to use api without the Frontend application.
 
-### Running Tests:
-To run backend tests:
+## Tests
+### Prerequisites
+Before running the tests, ensure that all the required dependencies and Docker containers are running. You will need:
+
+- Docker and Docker Compose installed.
+- The necessary services (app, API, and database) running using Docker Compose.
+
+### Running Tests
+1. **Bring Up the Docker Environment**: if the containers are not already running, use Docker Compose to start them:
 ```bash
-php artisan test
+docker-compose up --build
 ```
+
+This will start the following services:
+- app: The main application running on port 8080.
+- api: The API service running on port 9005.
+- db: The MySQL database running on port 3306.
+
+2. Running Unit and Feature Tests on backend-api
+To run the tests use the following commands:
+```bash
+docker exec -it <orders-api-container> php artisan test
+```
+
+Wait for the output. For example:
+<div align="center">
+	<img src="./docs/tests_results.png">
+</div>
 
 ## Troubleshooting
 ### Containers Won't Start or Exit Immediately
