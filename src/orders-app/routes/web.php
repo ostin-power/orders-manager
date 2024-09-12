@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\WebOrderController;
+use App\Http\Controllers\WebProductController;
 use Illuminate\Support\Facades\Route;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [WebOrderController::class, 'index'])->name('orders.index');
 Route::get('/show/{id}', [WebOrderController::class, 'show'])->name('orders.show');
 Route::get('/order/{id}/edit', [WebOrderController::class, 'edit'])->name('orders.edit');
+Route::get('/products', [WebProductController::class, 'index'])->name('products.index');
 
 /**
  * Post Requests

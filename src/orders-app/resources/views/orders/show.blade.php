@@ -1,13 +1,37 @@
-<h1 class="main-color">Order #{{ $order->id }}</h1>
+<h5 class="main-color">ID: {{ $order['id'] }}</h5>
 
-<h3>Details</h3>
-<p><strong>Name:</strong> {{ $order->name }}</p>
-<p><strong>Description:</strong> {{ $order->description }}</p>
-<p><strong>Date:</strong> {{ $order->date }}</p>
+<table class="table table-striped table-bordered">
+    <tbody>
+        <tr>
+            <td><strong>Name:</strong></td>
+            <td>{{ $order['name'] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Description:</strong></td>
+            <td>{{ $order['description'] }}</td>
+        </tr>
+        <tr>
+            <td><strong>Date:</strong></td>
+            <td>{{ $order['date'] }}</td>
+        </tr>
+    </tbody>
+</table>
 
-<h3>Products</h3>
-<ul>
-    @foreach($order->products as $product)
-        <li>{{ $product->name }} - {{ $product->pivot->quantity }}</li>
-    @endforeach
-</ul>
+<h4>Products</h4>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($order['products'] as $product)
+            <tr>
+                <td>{{ $product['name'] }}</td>
+                <td>{{ $product['pivot']['quantity'] }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+

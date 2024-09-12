@@ -1,19 +1,23 @@
-<h1 class="main-color">Edit Order #{{ $order->id }}</h1>
+<h5 class="main-color">ID: {{ $order['id'] }}</h5>
 
-<form action="{{ route('orders.update', $order->id) }}" method="POST">
+<form action="{{ route('orders.update', $order['id']) }}" method="POST">
     @csrf
     @method('PUT')
     <div class="form-group">
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $order->name) }}" required>
+        <input type="text" id="name" name="name" class="form-control" value="{{ old('name', $order['name']) }}" required>
     </div>
     <div class="form-group">
         <label for="description">Description</label>
-        <textarea id="description" name="description" class="form-control" rows="3" required>{{ old('description', $order->description) }}</textarea>
+        <textarea id="description" name="description" class="form-control" rows="3" required>{{ old('description', $order['description']) }}</textarea>
     </div>
     <div class="form-group">
         <label for="date">Date</label>
-        <input type="date" id="date" name="date" class="form-control" value="{{ old('date', $order->date) }}" required>
+        <input type="date" id="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d', strtotime($order['date'])) ) }}" required>
     </div>
-    <button type="submit" class="btn btn-main">Update Order</button>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-main">Update Order</button>
+    </div>
+
 </form>

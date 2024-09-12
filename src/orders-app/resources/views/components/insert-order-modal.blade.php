@@ -1,5 +1,5 @@
 <div class="modal fade" id="insertOrderModal" tabindex="-1" role="dialog" aria-labelledby="insertOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background-color: #C82333; color: white;">
                 <h5 class="modal-title" id="insertOrderModalLabel">Insert New Order</h5>
@@ -24,19 +24,32 @@
                     </div>
                     <div class="form-group">
                         <label for="products">Select Products</label>
-                        <div id="products-container">
-                            @foreach($products as $product)
-                                <div class="form-row product-row alig-center">
-                                    <div class="col-md-8">
-                                        <label for="product-{{ $product->id }}">{{ $product->name }}</label>
-                                        <input type="hidden" name="products[{{ $product->id }}][id]" value="{{ $product->id }}">
-                                        <input type="number" id="quantity-{{ $product->id }}" name="products[{{ $product->id }}][quantity]" class="form-control" placeholder="Quantity" min="1">
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 60%;">Product Name</th>
+                                    <th style="width: 40%;">Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($products as $product)
+                                    <tr>
+                                        <td style="width: 60%;">
+                                            <label for="product-{{ $product['id'] }}">{{ $product['name'] }}</label>
+                                            <input type="hidden" name="products[{{ $product['id'] }}][id]" value="{{ $product['id'] }}">
+                                        </td>
+                                        <td style="width: 40%;">
+                                            <input type="number" id="quantity-{{ $product['id'] }}" name="products[{{ $product['id'] }}][quantity]" class="form-control" placeholder="Quantity" min="1">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
-                    <button type="submit" class="btn btn-main">Insert Order</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-main">Insert Order</button>
+                    </div>
                 </form>
             </div>
         </div>

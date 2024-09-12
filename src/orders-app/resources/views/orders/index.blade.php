@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="main-color">Order List</h1>
+    <h3 class="main-color">Order List</h1>
 
     <form method="GET" action="{{ route('orders.index') }}" class="mb-4">
         <div class="form-row">
@@ -22,28 +22,28 @@
         </div>
     </form>
 
-    <table class="table table-striped">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th style="width: 3%;">ID</th>
+                <th style="width: 15%;">Name</th>
+                <th style="width: 47%;">Description</th>
+                <th style="width: 12%;">Date</th>
+                <th style="width: 23%;">Actions</th>
             </tr>
         </thead>
         <tbody>
             @foreach($orders as $order)
                 <tr>
-                    <td>{{ $order->id }}</td>
-                    <td>{{ $order->name }}</td>
-                    <td>{{ $order->description }}</td>
-                    <td>{{ $order->date }}</td>
-                    <td>
+                    <td style="width: 3%;">{{ $order['id'] }}</td>
+                    <td style="width: 15%;">{{ $order['name'] }}</td>
+                    <td style="width: 47%;">{{ $order['description'] }}</td>
+                    <td style="width: 12%;">{{ date('d-m-Y', strtotime($order['date']))  }}</td>
+                    <td style="width: 23%;">
                         <div class="d-flex align-items-center justify-content-between">
-                            <button class="btn btn-info btn-sm show-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.show', $order->id) }}"><i class="fa-solid fa-circle-info"></i> View</button>
-                            <button class="btn btn-secondary btn-sm edit-modal" data-id="{{ $order->id }}" data-url="{{ route('orders.edit', $order->id) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <form action="{{ route('orders.delete', $order->id) }}" method="POST" class="d-inline">
+                            <button class="btn btn-info btn-sm show-modal mr-2" data-id="{{ $order['id'] }}" data-url="{{ route('orders.show', $order['id']) }}"><i class="fa-solid fa-circle-info"></i> View</button>
+                            <button class="btn btn-secondary btn-sm edit-modal mr-2" data-id="{{ $order['id'] }}" data-url="{{ route('orders.edit', $order['id']) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
+                            <form action="{{ route('orders.delete', $order['id']) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash"></i> Delete</button>
@@ -58,78 +58,4 @@
     @include('components.show-edit-order-modal')
     @include('components.insert-order-modal', ['products' => $products])
 
-@endsection
-
-@section('scripts')
-    <script>
-        function showEditMode() {
-            document.getElementById('editFooter').classList.remove('d-none');
-        }
-
-        function hideEditMode() {
-            document.getElementById('editFooter').classList.add('d-none');
-        }
-
-        $(document).ready(function() {
-            // Show Modal
-            $(document).on('click', '.show-modal', function() {
-                var url = $(this).data('url');
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#orderModalLabel').text('Order Details');
-                        $('#orderModalContent').html(response);
-                        $('#orderModal').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching show data:', error);
-                    }
-                });
-            });
-
-            // Edit Modal
-            $(document).on('click', '.edit-modal', function() {
-                var url = $(this).data('url');
-
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function(response) {
-                        $('#orderModalLabel').text('Edit Order');
-                        $('#orderModalContent').html(response);
-                        $('#orderModal').modal('show');
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error fetching edit data:', error); // Log any errors
-                    }
-                });
-            });
-
-            // Insert Modal
-            $('#insertOrderForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-
-                $.ajax({
-                    url: "{{ route('orders.store') }}",
-                    type: 'POST',
-                    data: formData,
-                    success: function(response) {
-                        $('#insertOrderModal').modal('hide');
-                        $('#insertOrderForm')[0].reset();
-
-                        // Optionally, refresh the order list or append the new order to the table
-                        alert('Order inserted successfully!');
-                        location.reload(); // Optionally refresh the page to see the new order
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error inserting order:', error);
-                        alert('Failed to insert order. Please try again.');
-                    }
-                });
-            });
-        });
-    </script>
 @endsection

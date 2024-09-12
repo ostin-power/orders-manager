@@ -40,8 +40,8 @@ class WebOrderController extends Controller {
         }
 
         return view('orders.index', [
-            'orders'    => json_decode(json_encode($orders['orders'])),
-            'products'  => json_decode(json_encode($products['products'])),
+            'orders'    => $orders['orders'],
+            'products'  => $products['products'],
         ]);
     }
 
@@ -59,7 +59,7 @@ class WebOrderController extends Controller {
         } else {
             abort(500, 'Error fetching order details from external service.');
         }
-        return view('orders.show', ['order' => json_decode(json_encode($orderDetails['order']))]);
+        return view('orders.show', ['order' => $orderDetails['order']]);
     }
 
     /**
@@ -75,7 +75,7 @@ class WebOrderController extends Controller {
         } else {
             abort(500, 'Error fetching order details from external service.');
         }
-        return view('orders.edit', ['order' => json_decode(json_encode($orderDetails['order']))]);
+        return view('orders.edit', ['order' => $orderDetails['order']]);
     }
 
     /**
