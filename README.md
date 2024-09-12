@@ -14,7 +14,7 @@ System to monitor and manage daily user orders.
 
 ### Steps to Run the Project:
 1. Clone the repository.
-2. Run `docker-compose up --build`.
+2. Run `docker-compose up --build -d`.
 3. Run `docker ps` to make sure that application is up&running.
 4. Run `docker exec -it <api-container-name> php artisan migrate:fresh` to run database migrations
 5. Run `docker exec -it <api-container-name> php artisan db:seed` to create fake data to make some tests
@@ -41,6 +41,11 @@ Before running the tests, ensure that all the required dependencies and Docker c
 
 - Docker and Docker Compose installed.
 - The necessary services (app, API, and database) running using Docker Compose.
+
+**Make sure that you ran database migration in previous setup steps** 
+```bash
+docker exec -it <api-container-name> php artisan migrate:fresh
+```
 
 ### Running Tests
 1. **Bring Up the Docker Environment**: if the containers are not already running, use Docker Compose to start them:
