@@ -23,6 +23,7 @@
         <tr>
             <th>Name</th>
             <th>Quantity</th>
+            <th>Price</th>
         </tr>
     </thead>
     <tbody>
@@ -30,6 +31,7 @@
             <tr>
                 <td>{{ $product['name'] }}</td>
                 <td>{{ $product['pivot']['quantity'] }}</td>
+                <td>{{ $product['price'] }}</td>
             </tr>
         @endforeach
     </tbody>

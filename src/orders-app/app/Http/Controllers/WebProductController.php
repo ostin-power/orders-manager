@@ -31,6 +31,7 @@ class WebProductController extends Controller {
         } else {
             abort(500, 'Error fetching orders from external service.');
         }
+
         return view('products.index', [
             'products'  => $products['products'],
         ]);

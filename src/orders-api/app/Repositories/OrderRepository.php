@@ -64,7 +64,10 @@ class OrderRepository implements OrderRepositoryInterface {
      */
     public function show ($order_id) {
         $order_details = Order::find($order_id);
-        return $order_details->load('products');
+        if($order_details) {
+            return $order_details->load('products');
+        }
+        return false;
     }
 
     /**
@@ -90,9 +93,9 @@ class OrderRepository implements OrderRepositoryInterface {
                 }
                 $order->products()->sync($products_to_insert);
             }
+            return $order->load('products'); // Return the updated order with its products
         }
-        // Return the updated order with its products
-        return $order->load('products');
+        return false;
     }
 
     /**

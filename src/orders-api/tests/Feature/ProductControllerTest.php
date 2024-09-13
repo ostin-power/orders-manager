@@ -10,7 +10,7 @@ use App\Models\Product;
 class ProductControllerTest extends TestCase
 {
     /**
-     * Test the index method of the ProductController with actual database records.
+     * Test the index method of the ProductController.
      *
      * @return void
      */
