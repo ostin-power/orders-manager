@@ -34,11 +34,11 @@
                             <tbody>
                                 @foreach($products as $product)
                                     <tr>
-                                        <td style="width: 60%;">
+                                        <td style="width: 70%;">
                                             <label for="product-{{ $product['id'] }}">{{ $product['name'] }}</label>
                                             <input type="hidden" name="products[{{ $product['id'] }}][id]" value="{{ $product['id'] }}">
                                         </td>
-                                        <td style="width: 40%;">
+                                        <td style="width: 30%;">
                                             <input type="number" id="quantity-{{ $product['id'] }}" name="products[{{ $product['id'] }}][quantity]" class="form-control" placeholder="Quantity" min="1">
                                         </td>
                                     </tr>

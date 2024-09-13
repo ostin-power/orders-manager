@@ -9,6 +9,8 @@ services:
       - ./src/orders-app:/var/www
     networks:
       - private
+    command: >
+      sh -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
   api:
     build:
       context: .
@@ -21,6 +23,8 @@ services:
       - db
     networks:
       - private
+    command: >
+      sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9005"
   db:
     image: mysql:8.0
     environment:

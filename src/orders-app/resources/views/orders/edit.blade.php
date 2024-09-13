@@ -16,7 +16,6 @@
         <input type="date" id="date" name="date" class="form-control" value="{{ old('date', date('Y-m-d', strtotime($order['date'])) ) }}" required>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         <button type="submit" class="btn btn-main">Update Order</button>
     </div>
 
