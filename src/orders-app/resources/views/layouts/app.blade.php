@@ -95,7 +95,6 @@
                     });
                 });
 
-                //Delete button
                 $('.delete-btn').on('click', function(e) {
                     e.preventDefault();
                     var form = $(this).closest('form');
@@ -110,7 +109,32 @@
                         confirmButtonText: 'Yes, delete it!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            form.submit();
+                            $.ajax({
+                                url: form.attr('action'),
+                                type: 'POST',
+                                data: form.serialize(),
+                                success: function(response) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: 'The order has been deleted.',
+                                    }).then(() => {
+                                        location.reload(); // Reload the page to reflect changes
+                                    });
+                                },
+                                error: function(xhr) {
+                                    var response = xhr.responseJSON || {};
+                                    var errorMessage = response.message || 'Failed to delete order. Please try again.';
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Failed',
+                                        text: errorMessage,
+                                    });
+
+                                    console.error('Error deleting order:', xhr);
+                                }
+                            });
                         }
                     });
                 });

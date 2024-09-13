@@ -96,16 +96,21 @@
                         title: 'Success',
                         text: 'Order inserted successfully!',
                     }).then(() => {
-                        location.reload(); // refresh to see the new order
+                        location.reload();
                     });
                 },
-                error: function(xhr, status, error) {
+                error: function(xhr) {
+                    // Check if the response is JSON
+                    var response = xhr.responseJSON || {};
+                    var errorMessage = response.message || 'Failed to insert order. Please try again.';
+
                     Swal.fire({
                         icon: 'error',
                         title: 'Failed',
-                        text: 'Failed to insert order. Please try again.',
+                        text: errorMessage,
+                    }).then(() => {
+                        location.reload();
                     });
-                    console.error('Error inserting order:', error);
                 }
             });
         });

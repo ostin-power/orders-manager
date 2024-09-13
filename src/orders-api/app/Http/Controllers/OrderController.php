@@ -216,7 +216,7 @@ class OrderController extends Controller {
         return response()->json([
             'code'          => 201,
             'order_created' => $result
-        ], 201);
+        ],201);
     }
 
     /**
