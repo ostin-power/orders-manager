@@ -58,13 +58,14 @@ This will start the following services:
 - api: The API service running on port 9005.
 - db: The MySQL database running on port 3306.
 
-2. Running Unit and Feature Tests on backend-api
+2. Running Unit and Feature Tests on both backend and frontend<br>
 To run the tests use the following commands:
 ```bash
+docker exec -it <orders-app-container> php artisan test
 docker exec -it <orders-api-container> php artisan test
 ```
 
-Wait for the output. For example:
+Wait for the output. It would be like this:
 <div align="center">
 	<img src="./docs/tests_results.png">
 </div>
