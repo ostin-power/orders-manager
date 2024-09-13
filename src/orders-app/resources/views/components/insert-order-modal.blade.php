@@ -55,3 +55,59 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+    // Insert Modal
+        $('#insertOrderForm').on('submit', function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            // Check if at least one product quantity is greater than zero
+            var hasQuantity = false;
+            $('input[name^="products"][name$="[quantity]"]').each(function() {
+                var quantity = $(this).val();
+                if (quantity && parseInt(quantity) > 0) {
+                    hasQuantity = true;
+                    return false;
+                }
+            });
+
+            // If no valid quantity is set, show an alert and stop form submission
+            if (!hasQuantity) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Invalid Quantity',
+                    text: 'Please set a quantity for at least one product.',
+                });
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('orders.store') }}",
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    $('#insertOrderModal').modal('hide');
+                    $('#insertOrderForm')[0].reset();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Order inserted successfully!',
+                    }).then(() => {
+                        location.reload(); // refresh to see the new order
+                    });
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Failed',
+                        text: 'Failed to insert order. Please try again.',
+                    });
+                    console.error('Error inserting order:', error);
+                }
+            });
+        });
+    });
+</script>

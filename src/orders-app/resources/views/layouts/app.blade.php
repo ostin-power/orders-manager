@@ -5,11 +5,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Orders</title>
 
+        <!-- Bootstrap -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+        <!-- Icons -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+        <!-- JQuery -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+        <!-- Alerts -->
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- CSS -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     </head>
@@ -52,7 +62,11 @@
                             $('#orderModal').modal('show');
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching data!');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Error fetching data!',
+                            });
                             console.error('Error fetching show data:', error); //log errors
                         }
                     });
@@ -71,48 +85,32 @@
                             $('#orderModal').modal('show');
                         },
                         error: function(xhr, status, error) {
-                            alert('Error fetching data!');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Error fetching data!',
+                            });
                             console.error('Error fetching edit data:', error); //log errors
                         }
                     });
                 });
 
-                // Insert Modal
-                $('#insertOrderForm').on('submit', function(e) {
+                //Delete button
+                $('.delete-btn').on('click', function(e) {
                     e.preventDefault();
-                    var formData = $(this).serialize();
+                    var form = $(this).closest('form');
 
-                    // Check if at least one product quantity is greater than zero
-                    var hasQuantity = false;
-                    $('input[name^="products"][name$="[quantity]"]').each(function() {
-                        var quantity = $(this).val();
-                        if (quantity && parseInt(quantity) > 0) {
-                            hasQuantity = true;
-                            return false;
-                        }
-                    });
-
-                    // If no valid quantity is set, show an alert and stop form submission
-                    if (!hasQuantity) {
-                        alert('Please set a quantity for at least one product.');
-                        return;
-                    }
-
-                    $.ajax({
-                        url: "{{ route('orders.store') }}",
-                        type: 'POST',
-                        data: formData,
-                        success: function(response) {
-                            $('#insertOrderModal').modal('hide');
-                            $('#insertOrderForm')[0].reset();
-
-                            // Optionally, refresh the order list or append the new order to the table
-                            alert('Order inserted successfully!');
-                            location.reload(); // refresh to see the new order
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error inserting order:', error);
-                            alert('Failed to insert order. Please try again.');
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            form.submit();
                         }
                     });
                 });

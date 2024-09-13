@@ -43,10 +43,10 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <button class="btn btn-info btn-sm show-modal mr-2" data-id="{{ $order['id'] }}" data-url="{{ route('orders.show', $order['id']) }}"><i class="fa-solid fa-circle-info"></i> View</button>
                             <button class="btn btn-secondary btn-sm edit-modal mr-2" data-id="{{ $order['id'] }}" data-url="{{ route('orders.edit', $order['id']) }}"><i class="fa-regular fa-pen-to-square"></i> Edit</button>
-                            <form action="{{ route('orders.delete', $order['id']) }}" method="POST" class="d-inline">
+                            <form id="deleteOrderForm" action="{{ route('orders.delete', $order['id']) }}" method="POST" class="d-inline">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')"><i class="fa-solid fa-trash"></i> Delete</button>
+                                <button type="button" class="btn btn-danger btn-sm delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
                             </form>
                         </div>
                     </td>
