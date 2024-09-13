@@ -44,4 +44,30 @@ class WebProductControllerTest extends TestCase
         $response = $this->get(route('products.index'));
         $response->assertStatus(500);
     }
+
+    /**
+     * Test the store method.
+     *
+     * @return void
+     */
+    public function test_store_product() {
+        // Mock external API response
+        $mockResponse = [
+            'product_created' => [
+                ['id' => 1, 'name' => 'New Product', 'price' => 10],
+            ]
+        ];
+
+        Http::fake([
+            'http://api:9005/api/v1/products' => Http::response($mockResponse, 201),
+        ]);
+
+        $response = $this->post(route('products.store'), [
+            'name'  => 'New Product',
+            'price' => 10,
+        ]);
+
+        // Assert redirection
+        $response->assertStatus(201);
+    }
 }

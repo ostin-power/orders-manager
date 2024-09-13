@@ -15,4 +15,15 @@ class ProductRepository implements ProductRepositoryInterface {
     public function index() {
         return Product::all();
     }
+
+    /**
+     * Store a new product
+     *
+     * @param string $name
+     * @param int $price
+     * @return object $product_stored
+     */
+    public function store(string $name, int $price) {
+        return Product::create(['name' => $name, 'price' => $price]);
+    }
 }

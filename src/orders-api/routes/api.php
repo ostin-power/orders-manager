@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1'], function() {
      * Post Routes
      */
     Route::post('/orders', [OrderController::class, 'store']);
+    Route::post('/products', [ProductController::class, 'store']);
 
     /**
      * Put Routes

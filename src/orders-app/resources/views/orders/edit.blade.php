@@ -42,11 +42,16 @@
                         location.reload();
                     });
                 },
-                error: function(xhr, status, error) {
+                error: function(xhr) {
+                    var response = xhr.responseJSON || {};
+                    var errorMessage = response.message || 'Failed to update order. Please try again.';
+
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to update the order. Please try again.',
+                        title: 'Failed',
+                        text: errorMessage,
+                    }).then(() => {
+                        location.reload();
                     });
                 }
             });

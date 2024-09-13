@@ -97,19 +97,17 @@ class WebOrderController extends Controller {
             }
         }
 
-        $response = Http::post($this->backend_url.'/orders/', [
+        $response = Http::post($this->backend_url.'/orders', [
             'name'          => $request->input('name'),
             'description'   => $request->input('description'),
             'date'          => $request->input('date'),
             'products'      => $product_to_send
         ]);
 
-
-
         if ($response->successful()) {
-            return redirect()->route('orders.index')->with('success', 'Order created successfully.');
+            return response()->json(['message' => 'Order created successfully.'], 201);
         } else {
-            return redirect()->route('orders.index')->with('error', 'Error creating order.');
+            return response()->json(['message' => 'Error creating order.'], 500);
         }
     }
 
@@ -128,9 +126,9 @@ class WebOrderController extends Controller {
         ]);
 
         if ($response->successful()) {
-            return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
+            return response()->json(['message' => 'Order update successfully.'], 201);
         } else {
-            return redirect()->route('orders.index')->with('error', 'Error updating order.');
+            return response()->json(['message' => 'Error updating order.'], 500);
         }
     }
 
@@ -143,9 +141,9 @@ class WebOrderController extends Controller {
     public function delete($id) {
         $response = Http::delete($this->backend_url.'/orders/'.$id);
         if ($response->successful()) {
-            return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
+            return response()->json(['message' => 'Order deleted successfully.'], 204);
         } else {
-            return redirect()->route('orders.index')->with('error', 'Error deleting order.');
+            return response()->json(['message' => 'Error deleting order.'], 500);
         }
     }
 

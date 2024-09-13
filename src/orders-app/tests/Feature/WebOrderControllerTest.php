@@ -120,12 +120,10 @@ class WebOrderControllerTest extends TestCase
      */
     public function test_store_order() {
         // Mock external API response
-        $mockResponse = [
-            'success' => true
-        ];
+        $mockResponse = ['message' => 'Order created successfully.'];
 
         Http::fake([
-            'http://api:9005/api/v1/orders/1' => Http::response($mockResponse, 201),
+            'http://api:9005/api/v1/orders' => Http::response($mockResponse, 201),
         ]);
 
         $response = $this->post(route('orders.store'), [
@@ -139,8 +137,7 @@ class WebOrderControllerTest extends TestCase
         ]);
 
         // Assert redirection
-        $response->assertStatus(302); //Controller make a redirect to index
-        $response->assertRedirect('/');
+        $response->assertStatus(201);
     }
 
     /**
@@ -162,8 +159,7 @@ class WebOrderControllerTest extends TestCase
         ], ['X-CSRF-TOKEN' => csrf_token()]);
 
         // Assert redirection
-        $response->assertStatus(302); //Controller make a redirect to index
-        $response->assertRedirect('/');
+        $response->assertStatus(201);
     }
 
     /**
@@ -180,7 +176,6 @@ class WebOrderControllerTest extends TestCase
         $response = $this->delete(route('orders.delete', ['id' => 1]), [], ['X-CSRF-TOKEN' => csrf_token()]);
 
         // Assert redirection
-        $response->assertStatus(302); //Controller make a redirect to index
-        $response->assertRedirect('/');
+        $response->assertStatus(204);
     }
 }

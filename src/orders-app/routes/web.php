@@ -16,6 +16,7 @@ Route::get('/products', [WebProductController::class, 'index'])->name('products.
  * Post Requests
  */
 Route::post('/order/store', [WebOrderController::class, 'store'])->name('orders.store');
+Route::post('/product/store', [WebProductController::class, 'store'])->name('products.store');
 
 /**
  * Put Requests

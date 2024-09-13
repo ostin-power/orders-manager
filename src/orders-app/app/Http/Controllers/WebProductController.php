@@ -36,4 +36,23 @@ class WebProductController extends Controller {
             'products'  => $products['products'],
         ]);
     }
+
+    /**
+     * Creates a new product
+     *
+     * @param Request $request
+     * @return view index
+     */
+    public function store(Request $request) {
+        $response = Http::post($this->backend_url.'/products/', [
+            'name'    => $request->input('name'),
+            'price'   => $request->input('price')
+        ]);
+
+        if ($response->successful()) {
+            return response()->json(['message' => 'Product created successfully.'], 201);
+        } else {
+            return response()->json(['message' => 'Error creating product.'], 500);
+        }
+    }
 }

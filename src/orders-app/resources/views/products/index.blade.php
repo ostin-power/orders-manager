@@ -3,6 +3,17 @@
 @section('content')
     <h3 class="main-color">Products List</h1>
 
+    <div class="row" style="padding-bottom: 15px;">
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3 d-flex justify-content-end">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#insertProductModal">
+                <i class="fa-solid fa-plus"></i> Insert
+            </button>
+        </div>
+    </div>
+
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -21,5 +32,7 @@
             @endforeach
         </tbody>
     </table>
+
+    @include('components.insert-product-modal')
 
 @endsection
