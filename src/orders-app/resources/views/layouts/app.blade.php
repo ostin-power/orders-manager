@@ -82,6 +82,22 @@
                     e.preventDefault();
                     var formData = $(this).serialize();
 
+                    // Check if at least one product quantity is greater than zero
+                    var hasQuantity = false;
+                    $('input[name^="products"][name$="[quantity]"]').each(function() {
+                        var quantity = $(this).val();
+                        if (quantity && parseInt(quantity) > 0) {
+                            hasQuantity = true;
+                            return false;
+                        }
+                    });
+
+                    // If no valid quantity is set, show an alert and stop form submission
+                    if (!hasQuantity) {
+                        alert('Please set a quantity for at least one product.');
+                        return;
+                    }
+
                     $.ajax({
                         url: "{{ route('orders.store') }}",
                         type: 'POST',
