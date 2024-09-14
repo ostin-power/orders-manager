@@ -13,7 +13,9 @@ System to monitor and manage daily user orders.
 - Docker Compose
 
 ### Steps to Run the Project:
-1. Clone the repository.
+1. Clone the repository: `git clone https://github.com/ostin-power/orders-manager.git`
+2. In the root directory copy .env.example: `cp .env.example .env`
+3. Change any conf values you need such as ports or db name **(it is advisable to keep the default values)**
 2. Run `docker-compose up --build -d`.
 3. Run `docker ps` to make sure that application is up&running.
 4. Run `docker exec -it <api-container-name> php artisan migrate:fresh` to run database migrations
@@ -23,17 +25,21 @@ System to monitor and manage daily user orders.
 ## API Endpoints:
 - `GET /api/v1/orders`: Fetch all orders with optional filters.
 - `GET /api/v1/orders/{order}`: Fetch a specific order by ID.
+- `GET /api/v1/products`: Fetch all products.
+- `GET /api/v1/products/{product}`: Fetch a specific product by ID.
 - `POST /api/v1/orders`: Create a new order.
+- `POST /api/v1/products`: Create a new product.
 - `PUT /api/v1/orders/{order}`: Update an existing order.
+- `PUT /api/v1/products/{product}`: Update an existing product.
 - `DELETE /api/v1/orders/{order}`: Delete an order.
+- `DELETE /api/v1/products/{product}`: Delete an order.
 
-## Swagger documentation
-For more details on backend API Endopoints, once your containers are up&running, go to :
+### Backend API Swagger documentation
+You can try backend APIs from Swagger interface: this will simplify your tests or give a powerful instrument to use api without the Frontend application. For more details about Endopoints, once your containers are up&running, go to :
 ```bash
-http://localhost:9005/api/documentation
+http://localhost:<backend_api_port>/api/documentation
 ```
 
-You can also try it out from Swagger interface: this will simplify your tests or give a powerful instrument to use api without the Frontend application.
 
 ## Tests
 ### Prerequisites
