@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Http;
 
 class WebOrderController extends Controller {
 
-    private $backend_url;
+    private $backendUrl;
 
     /**
      * Class Constructor
      */
     public function __construct() {
-        $this->backend_url = env('BACKEND_URL', 'http://api:9005/api/v1');
+        $this->backendUrl = env('BACKEND_URL', 'http://api:9005/api/v1');
     }
 
     /**
@@ -23,13 +23,13 @@ class WebOrderController extends Controller {
      * @return view index
      */
     public function index(Request $request) {
-        $response_order = Http::get($this->backend_url.'/orders', [
+        $response_order = Http::get($this->backendUrl.'/orders', [
             'name'          => $request->input('name'),
             'description'   => $request->input('description'),
             'date'          => $request->input('date'),
         ]);
 
-        $response_products = Http::get($this->backend_url.'/products');
+        $response_products = Http::get($this->backendUrl.'/products');
 
 
         if ($response_order->successful()) {
@@ -52,7 +52,7 @@ class WebOrderController extends Controller {
      * @return view show
      */
     public function show($id) {
-        $response = Http::get($this->backend_url.'/orders/'.$id);
+        $response = Http::get($this->backendUrl.'/orders/'.$id);
 
         if ($response->successful()) {
             $orderDetails = $response->json();
@@ -69,7 +69,7 @@ class WebOrderController extends Controller {
      * @return view edit
      */
     public function edit($id) {
-        $response = Http::get($this->backend_url.'/orders/'.$id);
+        $response = Http::get($this->backendUrl.'/orders/'.$id);
         if ($response->successful()) {
             $orderDetails = $response->json();
         } else {
@@ -97,7 +97,7 @@ class WebOrderController extends Controller {
             }
         }
 
-        $response = Http::post($this->backend_url.'/orders', [
+        $response = Http::post($this->backendUrl.'/orders', [
             'name'          => $request->input('name'),
             'description'   => $request->input('description'),
             'date'          => $request->input('date'),
@@ -119,7 +119,7 @@ class WebOrderController extends Controller {
      * @return json $response
      */
     public function update(Request $request, $id) {
-        $response = Http::put($this->backend_url.'/orders/'.$id, [
+        $response = Http::put($this->backendUrl.'/orders/'.$id, [
             'name'          => $request->input('name'),
             'description'   => $request->input('description'),
             'date'          => $request->input('date'),
@@ -139,7 +139,7 @@ class WebOrderController extends Controller {
      * @return json $response
      */
     public function delete($id) {
-        $response = Http::delete($this->backend_url.'/orders/'.$id);
+        $response = Http::delete($this->backendUrl.'/orders/'.$id);
         if ($response->successful()) {
             return response()->json(['message' => 'Order deleted successfully.'], 204);
         } else {

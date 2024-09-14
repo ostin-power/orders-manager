@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Http;
 
 class WebProductController extends Controller {
 
-    private $backend_url;
+    private $backendUrl;
 
     /**
      * Class Constructor
      */
     public function __construct() {
-        $this->backend_url = env('BACKEND_URL', 'http://api:9005/api/v1');
+        $this->backendUrl = env('BACKEND_URL', 'http://api:9005/api/v1');
     }
 
     /**
@@ -22,7 +22,7 @@ class WebProductController extends Controller {
      * @return view index
      */
     public function index() {
-        $response_products = Http::get($this->backend_url.'/products');
+        $response_products = Http::get($this->backendUrl.'/products');
 
         if ($response_products->successful()) {
             $products = $response_products->json();
@@ -42,7 +42,7 @@ class WebProductController extends Controller {
      * @return view show
      */
     public function show($id) {
-        $response = Http::get($this->backend_url.'/products/'.$id);
+        $response = Http::get($this->backendUrl.'/products/'.$id);
 
         if ($response->successful()) {
             $orderDetails = $response->json();
@@ -59,7 +59,7 @@ class WebProductController extends Controller {
      * @return view index
      */
     public function store(Request $request) {
-        $response = Http::post($this->backend_url.'/products/', [
+        $response = Http::post($this->backendUrl.'/products/', [
             'name'    => $request->input('name'),
             'price'   => $request->input('price')
         ]);
@@ -79,7 +79,7 @@ class WebProductController extends Controller {
      * @return json $response
     */
     public function update(Request $request, $id) {
-        $response = Http::put($this->backend_url.'/products/'.$id, [
+        $response = Http::put($this->backendUrl.'/products/'.$id, [
             'price' => $request->input('price')
         ]);
 
@@ -97,7 +97,7 @@ class WebProductController extends Controller {
      * @return json $response
      */
     public function delete($id) {
-        $response = Http::delete($this->backend_url.'/products/'.$id);
+        $response = Http::delete($this->backendUrl.'/products/'.$id);
         if ($response->successful()) {
             return response()->json(['message' => 'Product deleted successfully.'], 204);
         } else {

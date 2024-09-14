@@ -4,19 +4,36 @@ services:
       context: .
       dockerfile: src/orders-app/Dockerfile
     ports:
-      - "8080:8000"
+      - "${FRONTEND_APP_PORT}:8000"
+    environment:
+      - APP_NAME=${FRONTEND_APP_NAME}
+      - APP_ENV=${FRONTEND_APP_ENV}
+      - APP_DEBUG=${FRONTEND_APP_DEBUG}
+      - BACKEND_URL=http://api:${BACKEND_API_PORT}/api/v1
     volumes:
       - ./src/orders-app:/var/www
     networks:
       - private
     command: >
-      sh -c "composer install && php artisan serve --host=0.0.0.0 --port=8000"
+      sh -c "python3 /usr/local/bin/setupenv.py && composer install && php artisan serve --host=0.0.0.0 --port=8000"
   api:
     build:
       context: .
       dockerfile: src/orders-api/Dockerfile
     ports:
-      - "9005:9005"
+      - "${BACKEND_API_PORT}:9005"
+    environment:
+      - APP_NAME=${BACKEND_APP_NAME}
+      - APP_ENV=${BACKEND_APP_ENV}
+      - APP_DEBUG=${BACKEND_APP_DEBUG}
+      - DB_CONNECTION=${BACKEND_DB_CONNECTION}
+      - DB_HOST=${BACKEND_DB_HOST}
+      - DB_PORT=${MYSQL_DB_PORT}
+      - DB_DATABASE=${MYSQL_DATABASE}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - FRONTEND_URL=http://app:${FRONTEND_APP_PORT}
+      - BACKEND_URL=http://api:${BACKEND_API_PORT}
     volumes:
       - ./src/orders-api:/var/www
     depends_on:
@@ -24,16 +41,16 @@ services:
     networks:
       - private
     command: >
-      sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9005"
+      sh -c "python3 /usr/local/bin/setupenv.py && composer install && php artisan serve --host=0.0.0.0 --port=9005"
   db:
     image: mysql:8.0
     environment:
-      - MYSQL_DATABASE=ordersdb
-      - MYSQL_ROOT_PASSWORD=orderspassword
-      - MYSQL_USER=admin
-      - MYSQL_PASSWORD=orderspassword
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${MYSQL_DB_PORT}:3306"
     volumes:
       - db_data:/var/lib/mysql
     networks:

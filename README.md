@@ -70,6 +70,12 @@ Wait for the output. It would be like this:
 	<img src="./docs/tests_results.png">
 </div>
 
+**After test execution, if you want clean database, run again the database seed to clean data:** 
+```bash
+docker exec -it <api-container-name> php artisan migrate:fresh
+docker exec -it <api-container-name> php artisan db:seed
+```
+
 ## Troubleshooting
 ### Containers Won't Start or Exit Immediately
 1. _Check Container Logs_: to see why a container is exiting or failing to start, view the logs. Check the logs for any errors, such as missing dependencies or incorrect environment configurations :
