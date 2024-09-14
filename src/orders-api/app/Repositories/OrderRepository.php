@@ -93,25 +93,24 @@ class OrderRepository implements OrderRepositoryInterface {
                 }
                 $order->products()->sync($products_to_insert);
             }
-            return $order->load('products'); // Return the updated order with its products
+            $order_result = $order->load('products');
+            return $order_result ? $order_result : false; // Return the updated order with its products
         }
-        return false;
+        return [];
     }
 
     /**
      * Delete the order, automatically removing associated products from the pivot table
      *
      * @param int $order_id
-     * @return null
+     * @return bool
      */
     public function delete(int $order_id) {
         $order = Order::find($order_id);
         if($order) {
-            $order->delete();
-            return true;
-        } else {
-            return false;
+            return $order->delete() ? true : false;
         }
+        return [];
     }
 }
 

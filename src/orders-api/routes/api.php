@@ -18,8 +18,9 @@ Route::group(['prefix' => 'v1'], function() {
      * Get Routes
      */
     Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
     Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/orders/{order}', [OrderController::class, 'show']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
 
     /**
      * Post Routes
@@ -31,10 +32,12 @@ Route::group(['prefix' => 'v1'], function() {
      * Put Routes
      */
     Route::put('/orders/{order}', [OrderController::class, 'update']);
+    Route::put('/products/{product}', [ProductController::class, 'update']);
 
     /**
      * Delete Routes
      */
     Route::delete('/orders/{order}', [OrderController::class, 'delete']);
+    Route::delete('/products/{product}', [ProductController::class, 'delete']);
 
 });

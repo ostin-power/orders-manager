@@ -221,11 +221,11 @@ class OrderController extends Controller {
 
     /**
      * @OA\Get(
-     *     path="/api/v1/orders/{order_id}",
+     *     path="/api/v1/orders/{id}",
      *     summary="Display the specified order along with its associated products by ID",
      *     tags={"Orders"},
      *     @OA\Parameter(
-     *         name="order_id",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the order to retrieve",
@@ -293,17 +293,17 @@ class OrderController extends Controller {
 
         return response()->json([
             'code'  => 200,
-            'order' => $this->_orderRepository->show($order_id)
+            'order' => $order
         ]);
     }
 
     /**
      * @OA\Put(
-     *     path="/api/v1/orders/{order_id}",
+     *     path="/api/v1/orders/{id}",
      *     summary="Update the specified order and its associated products. Request expects an array of products with quantity.",
      *     tags={"Orders"},
      *     @OA\Parameter(
-     *         name="order_id",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the order to update",
@@ -422,7 +422,7 @@ class OrderController extends Controller {
             $products
         );
 
-        if(!$update_details) {
+        if($update_details === false) {
             return response()->json(['code' => 500, 'message' => 'Order update failed'], 500);
         }
 
@@ -438,11 +438,11 @@ class OrderController extends Controller {
 
     /**
      * @OA\Delete(
-     *     path="/api/v1/orders/{order_id}",
+     *     path="/api/v1/orders/{id}",
      *     summary="Remove the specified order from the database along with its product associations.",
      *     tags={"Orders"},
      *     @OA\Parameter(
-     *         name="order_id",
+     *         name="id",
      *         in="path",
      *         required=true,
      *         description="ID of the order to delete",
@@ -460,17 +460,28 @@ class OrderController extends Controller {
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="Order not found")
      *         )
+     *     ),
+     *     @OA\Response(
+     *         response="500",
+     *         description="OOrder delete failed",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="code", type="integer", example=500),
+     *             @OA\Property(property="message", type="string", example="Order delete failed")
+     *         )
      *     )
      * )
      */
     public function delete($order_id) {
-        if($this->_orderRepository->delete($order_id)) {
-            return response()->json(null, 204);
-        } else {
-            return response()->json([
-                'code'      => 404,
-                'message'   => 'Order not found'
-            ], 404);
+        $delete_details = $this->_orderRepository->delete($order_id);
+
+        if($delete_details === false) {
+            return response()->json(['code' => 500, 'message' => 'Order delete failed'], 500);
         }
+
+        if(empty($delete_details)) {
+            return response()->json(['code' => 404, 'message' => 'Order not found'], 404);
+        }
+        return response()->json(null, 204);
     }
 }
