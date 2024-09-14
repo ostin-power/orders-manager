@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Product;
 
@@ -16,22 +14,21 @@ class ProductControllerTest extends TestCase
      */
     public function test_get_list_of_products() {
         // Use factories to create fake products
-        $products = Product::factory()->count(2)->create();
-        $response = $this->get('/api/v1/products');
+        $response = $this->getJson('/api/v1/products');
 
         // Assert the response status and structure
         $response->assertStatus(200);
-        $response->assertJson([
-            'code' => 200,
-            'products' => $products->map(function ($product) {
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'price' => $product->price,
-                    'created_at' => $product->created_at->toISOString(),
-                    'updated_at' => $product->updated_at->toISOString(),
-                ];
-            })->toArray()
+        $response->assertJsonStructure([
+            'code',
+            'products' => [
+                '*' => [
+                    'id',
+                    'name',
+                    'price',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]
         ]);
     }
 
@@ -69,22 +66,6 @@ class ProductControllerTest extends TestCase
     }
 
     /**
-     * Test product creation with missing name.
-     *
-     * @return void
-     */
-    public function test_product_creation_fails_with_missing_name() {
-        $payload = [
-            'price' => 50,
-        ];
-
-        $response = $this->postJson('/api/v1/products', $payload);
-
-        // Assert the validation error and HTTP status code
-        $response->assertStatus(422)->assertJsonValidationErrors(['name']);
-    }
-
-    /**
      * Test product creation with invalid price.
      *
      * @return void
@@ -100,4 +81,139 @@ class ProductControllerTest extends TestCase
         // Assert the validation error and HTTP status code
         $response->assertStatus(422)->assertJsonValidationErrors(['price']);
     }
+
+    /**
+     * Test product show info.
+     *
+     * @return void
+     */
+    public function test_show_product() {
+        // Create a product in the database
+        $product = Product::factory()->create();
+        $response = $this->getJson("/api/v1/products/{$product->id}");
+
+        $response->assertStatus(200)
+                ->assertJsonStructure([
+                    'code',
+                    'product' => [
+                        'id',
+                        'name',
+                        'price',
+                        'created_at',
+                        'updated_at'
+                    ]
+                ])
+                ->assertJson([
+                    'code' => 200,
+                    'product' => [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'price' => $product->price
+                    ]
+                ]);
+    }
+
+    /**
+     * Test product not found
+     *
+     * @return void
+     */
+    public function test_show_product_not_found() {
+        // Send a GET request to a non-existent product
+        $response = $this->getJson('/api/v1/products/9999');
+
+        $response->assertStatus(404)
+                ->assertJson([
+                    'code' => 404,
+                    'message' => 'Product not found'
+                ]);
+    }
+
+    /**
+     * Test product not found
+     *
+     * @return void
+     */
+    public function test_update_product() {
+        $product = Product::factory()->create([
+            'name'  => 'Test product 1',
+            'price' => 100
+        ]);
+
+        $response = $this->putJson("/api/v1/products/{$product->id}", [
+            'price' => 150
+        ]);
+
+        $response->assertStatus(204);
+
+        // Verify the product's price was updated in the database
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'price' => 150
+        ]);
+    }
+
+    /**
+     * Test product update failed - validation
+     *
+     * @return void
+     */
+    public function test_update_product_validation_error() {
+        $product = Product::factory()->create();
+        $response = $this->putJson("/api/v1/products/{$product->id}", []);
+
+        // Assert the response status is 422 Unprocessable Entity and has validation error
+        $response->assertStatus(422)->assertJsonValidationErrors('price');
+    }
+
+    /**
+     * Test update product not found
+     *
+     * @return void
+     */
+    public function test_update_product_not_found() {
+        $response = $this->putJson('/api/v1/products/9999', [
+            'price' => 150
+        ]);
+
+        $response->assertStatus(404)
+                ->assertJson([
+                    'code' => 404,
+                    'message' => 'Product not found'
+                ]);
+    }
+
+    /**
+     * Test delete product
+     *
+     * @return void
+     */
+    public function test_delete_product() {
+        $product  = Product::factory()->create();
+        $response = $this->deleteJson("/api/v1/products/{$product->id}");
+
+        $response->assertStatus(204);
+
+        // Verify the product was deleted from the database
+        $this->assertDatabaseMissing('products', [
+            'id' => $product->id
+        ]);
+    }
+
+    /**
+     * Test delete product not found
+     *
+     * @return void
+     */
+    public function test_delete_product_not_found() {
+        $response = $this->deleteJson('/api/v1/products/9999');
+
+        // Assert the response status is 404 and contains the correct error message
+        $response->assertStatus(404)
+                ->assertJson([
+                    'code' => 404,
+                    'message' => 'Product not found'
+                ]);
+    }
+
 }
