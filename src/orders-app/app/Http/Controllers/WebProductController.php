@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class WebProductController extends Controller {
 
@@ -38,6 +36,23 @@ class WebProductController extends Controller {
     }
 
     /**
+     * Returns specific products to frontend-app
+     *
+     * @param int $product_id
+     * @return view show
+     */
+    public function show($id) {
+        $response = Http::get($this->backend_url.'/products/'.$id);
+
+        if ($response->successful()) {
+            $orderDetails = $response->json();
+        } else {
+            abort(500, 'Error fetching product details from external service.');
+        }
+        return view('products.edit', ['product' => $orderDetails['product']]);
+    }
+
+    /**
      * Creates a new product
      *
      * @param Request $request
@@ -53,6 +68,40 @@ class WebProductController extends Controller {
             return response()->json(['message' => 'Product created successfully.'], 201);
         } else {
             return response()->json(['message' => 'Error creating product.'], 500);
+        }
+    }
+
+    /**
+     * Updates product price
+     *
+     * @param Request $request
+     * @param int $id
+     * @return json $response
+    */
+    public function update(Request $request, $id) {
+        $response = Http::put($this->backend_url.'/products/'.$id, [
+            'price' => $request->input('price')
+        ]);
+
+        if ($response->successful()) {
+            return response()->json(['message' => 'Product price update successfully.'], 201);
+        } else {
+            return response()->json(['message' => 'Error updating product.'], 500);
+        }
+    }
+
+    /**
+     * Deletes product
+     *
+     * @param int $id
+     * @return json $response
+     */
+    public function delete($id) {
+        $response = Http::delete($this->backend_url.'/products/'.$id);
+        if ($response->successful()) {
+            return response()->json(['message' => 'Product deleted successfully.'], 204);
+        } else {
+            return response()->json(['message' => 'Error deleting product.'], 500);
         }
     }
 }

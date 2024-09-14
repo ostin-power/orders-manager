@@ -116,7 +116,7 @@ class WebOrderController extends Controller {
      *
      * @param Request $request
      * @param int $id
-     * @return view index
+     * @return json $response
      */
     public function update(Request $request, $id) {
         $response = Http::put($this->backend_url.'/orders/'.$id, [
@@ -136,7 +136,7 @@ class WebOrderController extends Controller {
      * Deletes an order by its ID
      *
      * @param int $id
-     * @return view index
+     * @return json $response
      */
     public function delete($id) {
         $response = Http::delete($this->backend_url.'/orders/'.$id);

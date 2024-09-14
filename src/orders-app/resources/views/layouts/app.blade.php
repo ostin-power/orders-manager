@@ -49,7 +49,7 @@
             }
 
             $(document).ready(function() {
-                // Show Modal
+                // Show Order Modal
                 $(document).on('click', '.show-modal', function() {
                     var url = $(this).data('url');
 
@@ -72,7 +72,7 @@
                     });
                 });
 
-                // Edit Modal
+                // Edit Order Modal
                 $(document).on('click', '.edit-modal', function() {
                     var url = $(this).data('url');
 
@@ -91,6 +91,29 @@
                                 text: 'Error fetching data!',
                             });
                             console.error('Error fetching edit data:', error); //log errors
+                        }
+                    });
+                });
+
+                // Edit Product Modal
+                $(document).on('click', '.edit-product-modal', function() {
+                    var url = $(this).data('url');
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(response) {
+                            $('#productModalLabel').text('Edit Product');
+                            $('#productModalContent').html(response);
+                            $('#productModal').modal('show');
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Error fetching data!',
+                            });
+                            console.error('Error fetching edit data:', error); // Log errors
                         }
                     });
                 });
@@ -133,6 +156,50 @@
                                     });
 
                                     console.error('Error deleting order:', xhr);
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $('.delete-btn-product').on('click', function(e) {
+                    e.preventDefault();
+                    var form = $(this).closest('form');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: form.attr('action'),
+                                type: 'POST',
+                                data: form.serialize(),
+                                success: function(response) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: 'The product has been deleted.',
+                                    }).then(() => {
+                                        location.reload(); // Reload the page to reflect changes
+                                    });
+                                },
+                                error: function(xhr) {
+                                    var response = xhr.responseJSON || {};
+                                    var errorMessage = response.message || 'Failed to delete product. Please try again.';
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Failed',
+                                        text: errorMessage,
+                                    });
+
+                                    console.error('Error deleting product:', xhr);
                                 }
                             });
                         }

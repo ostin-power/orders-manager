@@ -379,16 +379,16 @@
                 }
             }
         },
-        "/api/v1/orders/{order_id}": {
+        "/api/v1/orders/{id}": {
             "get": {
                 "tags": [
                     "Orders"
                 ],
                 "summary": "Display the specified order along with its associated products by ID",
-                "operationId": "a3fe59fe0b2fb80deebd47bf5cce268f",
+                "operationId": "d9752171673795b587d678236ac33a2a",
                 "parameters": [
                     {
-                        "name": "order_id",
+                        "name": "id",
                         "in": "path",
                         "description": "ID of the order to retrieve",
                         "required": true,
@@ -537,10 +537,10 @@
                     "Orders"
                 ],
                 "summary": "Update the specified order and its associated products. Request expects an array of products with quantity.",
-                "operationId": "bada0467178ebb669f5670b462f30258",
+                "operationId": "dc03a67e717edf117391b48efc260881",
                 "parameters": [
                     {
-                        "name": "order_id",
+                        "name": "id",
                         "in": "path",
                         "description": "ID of the order to update",
                         "required": true,
@@ -769,10 +769,10 @@
                     "Orders"
                 ],
                 "summary": "Remove the specified order from the database along with its product associations.",
-                "operationId": "400e204d9ae69897926bd314b6db9245",
+                "operationId": "07199241052b60c5ffa42d48fd8ba4c1",
                 "parameters": [
                     {
-                        "name": "order_id",
+                        "name": "id",
                         "in": "path",
                         "description": "ID of the order to delete",
                         "required": true,
@@ -798,6 +798,26 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Order not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "OOrder delete failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order delete failed"
                                         }
                                     },
                                     "type": "object"
@@ -863,15 +883,13 @@
                         }
                     }
                 }
-            }
-        },
-        "/products": {
+            },
             "post": {
                 "tags": [
                     "Products"
                 ],
                 "summary": "Create a new product",
-                "operationId": "399770d33fa4672f1216707d0e236763",
+                "operationId": "cfdb2a3921bee30f9cad135e1c5f1452",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -955,6 +973,284 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Product creation failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get a product by ID",
+                "description": "Returns a product based on the provided ID",
+                "operationId": "showProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Product found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 200
+                                        },
+                                        "order": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "quidem"
+                                                },
+                                                "price": {
+                                                    "type": "string",
+                                                    "example": "65.15"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-13T15:50:32.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-09-13T15:50:32.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Order not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Update a product's price",
+                "description": "Updates the price of a product based on the provided ID and price",
+                "operationId": "updateProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Product price that needs to be updated",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "price"
+                                ],
+                                "properties": {
+                                    "price": {
+                                        "type": "integer",
+                                        "example": 100
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "204": {
+                        "description": "No content - Product successfully updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": null
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Product update failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product update failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "price": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The price field is required."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Delete a product",
+                "description": "Deletes a product based on the provided ID",
+                "operationId": "deleteProduct",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the product to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content - Product successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "example": null
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 404
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Product not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "integer",
+                                            "example": 500
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Product delete failed"
                                         }
                                     },
                                     "type": "object"

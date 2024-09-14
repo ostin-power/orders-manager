@@ -70,4 +70,77 @@ class WebProductControllerTest extends TestCase
         // Assert redirection
         $response->assertStatus(201);
     }
+
+    /**
+     * Test the update method.
+     *
+     * @return void
+     */
+    public function test_update_product_successfully() {
+        // Mock the HTTP request to the external backend
+        Http::fake([
+            'http://api:9005/api/v1/products/*' => Http::response(['success' => true], 201)
+        ]);
+
+        // Simulate the request data
+        $response = $this->putJson(route('products.update', ['id' => 1]),
+            ['price' => 100],
+            ['X-CSRF-TOKEN' => csrf_token()]
+        );
+
+        $response->assertStatus(201);
+    }
+
+    /**
+     * Test the update failure method.
+     *
+     * @return void
+     */
+    public function test_update_product_failure()  {
+        // Mock the HTTP request to the external backend with failure
+        Http::fake([
+            'http://api:9005/api/v1/products/products/*' => Http::response(['message' => 'Error updating product.'], 500)
+        ]);
+
+        $response = $this->putJson(route('products.update', ['id' => 23456]),
+            ['price' => 100],
+            ['X-CSRF-TOKEN' => csrf_token()]
+        );
+
+        $response->assertStatus(500);
+    }
+
+    /**
+     * Test the delete method.
+     *
+     * @return void
+     */
+    public function test_delete_product() {
+        // Mock external API response
+        Http::fake([
+            'http://api:9005/api/v1/products/*' => Http::response(null, 204),
+        ]);
+
+        $response = $this->delete(route('products.delete', ['id' => 1]), [], ['X-CSRF-TOKEN' => csrf_token()]);
+
+        // Assert redirection
+        $response->assertStatus(204);
+    }
+
+    /**
+     * Test the delete method.
+     *
+     * @return void
+     */
+    public function test_delete_product_failure() {
+        // Mock external API response
+        Http::fake([
+            'http://api:9005/api/v1/products/*' => Http::response(['message' => 'Error deleting product.'], 500),
+        ]);
+
+        $response = $this->delete(route('products.delete', ['id' => 123456]), [], ['X-CSRF-TOKEN' => csrf_token()]);
+
+        // Assert redirection
+        $response->assertStatus(500);
+    }
 }
