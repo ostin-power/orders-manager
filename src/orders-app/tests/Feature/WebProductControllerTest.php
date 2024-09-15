@@ -5,10 +5,12 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 
-class WebProductControllerTest extends TestCase
-{
+class WebProductControllerTest extends TestCase {
+
     use RefreshDatabase;
+    use WithoutMiddleware; //Disable CSRF protection or provide the token
 
     private $_backendUrl;
 
