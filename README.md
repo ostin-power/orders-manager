@@ -104,8 +104,8 @@ All services are part of the private network, ensuring secure, internal communic
 - `POST /api/v1/products`: Create a new product.
 - `PUT /api/v1/orders/{order}`: Update an existing order.
 - `PUT /api/v1/products/{product}`: Update an existing product.
-- `DELETE /api/v1/orders/{order}`: Delete an order.
-- `DELETE /api/v1/products/{product}`: Delete an order.
+- `DELETE /api/v1/orders/{order}`: Delete an order by ID.
+- `DELETE /api/v1/products/{product}`: Delete a product by ID.
 
 ### Swagger documentation
 You can try backend APIs from Swagger interface: this will simplify your tests or give a powerful instrument to use api without the Frontend application. For more details about Endopoints, once your containers are up&running, go to :
