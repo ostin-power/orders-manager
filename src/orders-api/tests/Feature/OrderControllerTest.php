@@ -12,14 +12,33 @@ class OrderControllerTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
+    protected $order;
+    protected $product;
+
+    /**
+     * Set up shared data for the tests.
+     *
+     * @return void
+     */
+    protected function setUp(): void {
+        parent::setUp();
+
+        // Create a common order and product for use in tests
+        $this->order = Order::factory()->create();
+        $this->product = Product::factory()->create();
+
+        // Attach the product to the order with a quantity
+        $this->order->products()->attach($this->product->id, ['quantity' => 3]);
+    }
+
     /**
      * Test fetching a list of orders.
      *
      * @return void
      */
     public function test_get_list_of_orders() {
-        // Create some orders for testing
-        $response   = $this->getJson('/api/v1/orders');
+        // Fetch the list of orders
+        $response = $this->getJson('/api/v1/orders');
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -51,16 +70,13 @@ class OrderControllerTest extends TestCase
      * @return void
      */
     public function test_create_order() {
-        // Create a product for the order
-        $product = Product::factory()->create();
-
         $data = [
             'name' => 'New Order',
             'description' => 'Order description',
             'date' => now()->toDateString(),
             'products' => [
                 [
-                    'product_id' => $product->id,
+                    'product_id' => $this->product->id,
                     'quantity' => 5,
                 ]
             ]
@@ -91,25 +107,22 @@ class OrderControllerTest extends TestCase
     }
 
     /**
-     * Test invalid order creation
+     * Test invalid order creation.
      *
      * @return void
      */
     public function test_order_creation_with_missing_param() {
-        // Create a product for the order
-        $product = Order::factory()->create();
-
         $data = [
             'date' => now()->toDateString(),
             'products' => [
                 [
-                    'product_id' => $product->id,
+                    'product_id' => $this->product->id,
                     'quantity' => 5,
                 ]
             ]
         ];
         $response = $this->postJson('/api/v1/orders', $data);
-        $response->assertStatus(422);
+        $response->assertStatus(422); // Expecting validation error due to missing 'name'
     }
 
     /**
@@ -118,12 +131,7 @@ class OrderControllerTest extends TestCase
      * @return void
      */
     public function test_show_order_by_id() {
-        // Create an order with associated products
-        $order      = Order::factory()->create();
-        $product    = Product::factory()->create();
-
-        $order->products()->attach($product->id, ['quantity' => 3]);
-        $response = $this->getJson('/api/v1/orders/' . $order->id);
+        $response = $this->getJson('/api/v1/orders/' . $this->order->id);
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -148,7 +156,7 @@ class OrderControllerTest extends TestCase
     }
 
     /**
-     * Test order not found
+     * Test order not found.
      *
      * @return void
      */
@@ -157,10 +165,10 @@ class OrderControllerTest extends TestCase
         $response = $this->getJson('/api/v1/orders/9999');
 
         $response->assertStatus(404)
-                ->assertJson([
-                    'code' => 404,
-                    'message' => 'Order not found'
-                ]);
+                 ->assertJson([
+                     'code' => 404,
+                     'message' => 'Order not found'
+                 ]);
     }
 
     /**
@@ -169,24 +177,19 @@ class OrderControllerTest extends TestCase
      * @return void
      */
     public function test_update_order() {
-        // Create an order with products
-        $order      = Order::factory()->create();
-        $product    = Product::factory()->create();
-        $order->products()->attach($product->id, ['quantity' => 3]);
-
         $updatedData = [
-            'name' => 'Test Updated Order Name',
-            'description' => 'Updated description for feature testing',
+            'name' => 'Updated Order Name',
+            'description' => 'Updated description',
             'date' => now()->toDateString(),
             'products' => [
                 [
-                    'product_id' => $product->id,
+                    'product_id' => $this->product->id,
                     'quantity' => 10,
                 ]
             ]
         ];
 
-        $response = $this->putJson('/api/v1/orders/' . $order->id, $updatedData);
+        $response = $this->putJson('/api/v1/orders/' . $this->order->id, $updatedData);
 
         $response->assertStatus(200)
                  ->assertJsonStructure([
@@ -211,64 +214,58 @@ class OrderControllerTest extends TestCase
     }
 
     /**
-     * Test update order not found
+     * Test updating a non-existent order.
      *
      * @return void
      */
     public function test_update_order_not_found() {
-        $order      = Order::factory()->create();
-        $product    = Product::factory()->create();
-        $order->products()->attach($product->id, ['quantity' => 3]);
-
         $response = $this->putJson('/api/v1/orders/9999', [
-            'name' => 'Test Updated Order Name',
-            'description' => 'Updated description for feature testing',
+            'name' => 'Updated Order Name',
+            'description' => 'Updated description',
             'date' => now()->toDateString(),
             'products' => [
                 [
-                    'product_id' => $product->id,
+                    'product_id' => $this->product->id,
                     'quantity' => 10,
                 ]
             ]
         ]);
 
         $response->assertStatus(404)
-                ->assertJson([
-                    'code' => 404,
-                    'message' => 'Order not found'
-                ]);
+                 ->assertJson([
+                     'code' => 404,
+                     'message' => 'Order not found'
+                 ]);
     }
 
     /**
-     * Test delete order
+     * Test deleting an order.
      *
      * @return void
      */
-    public function test_delete_product() {
-        $product  = Order::factory()->create();
-        $response = $this->deleteJson("/api/v1/orders/{$product->id}");
+    public function test_delete_order() {
+        $response = $this->deleteJson("/api/v1/orders/{$this->order->id}");
 
         $response->assertStatus(204);
 
-        // Verify the product was deleted from the database
+        // Verify the order was deleted from the database
         $this->assertDatabaseMissing('orders', [
-            'id' => $product->id
+            'id' => $this->order->id
         ]);
     }
 
     /**
-     * Test delete product not found
+     * Test deleting a non-existent order.
      *
      * @return void
      */
     public function test_delete_order_not_found() {
         $response = $this->deleteJson('/api/v1/orders/9999');
 
-        // Assert the response status is 404 and contains the correct error message
         $response->assertStatus(404)
-                ->assertJson([
-                    'code' => 404,
-                    'message' => 'Order not found'
-                ]);
+                 ->assertJson([
+                     'code' => 404,
+                     'message' => 'Order not found'
+                 ]);
     }
 }

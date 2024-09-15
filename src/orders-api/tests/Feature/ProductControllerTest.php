@@ -4,16 +4,36 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Models\Product;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 
-class ProductControllerTest extends TestCase
-{
+class ProductControllerTest extends TestCase {
+
+    use RefreshDatabase, WithFaker;
+
+    protected $product;
+
+    /**
+     * Set up shared data for the tests.
+     *
+     * @return void
+     */
+    protected function setUp(): void {
+        parent::setUp();
+
+        // Create a common product for use in tests
+        $this->product = Product::factory()->create();
+    }
+
     /**
      * Test the index method of the ProductController.
      *
      * @return void
      */
     public function test_get_list_of_products() {
-        // Use factories to create fake products
+        // Create additional products
+        Product::factory()->count(2)->create();
+
         $response = $this->getJson('/api/v1/products');
 
         // Assert the response status and structure
@@ -37,7 +57,7 @@ class ProductControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_successful_product_creation()  {
+    public function test_successful_product_creation() {
         $payload = [
             'name'  => 'Test Product',
             'price' => 50,
@@ -88,9 +108,7 @@ class ProductControllerTest extends TestCase
      * @return void
      */
     public function test_show_product() {
-        // Create a product in the database
-        $product = Product::factory()->create();
-        $response = $this->getJson("/api/v1/products/{$product->id}");
+        $response = $this->getJson("/api/v1/products/{$this->product->id}");
 
         $response->assertStatus(200)
                 ->assertJsonStructure([
@@ -106,15 +124,15 @@ class ProductControllerTest extends TestCase
                 ->assertJson([
                     'code' => 200,
                     'product' => [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'price' => $product->price
+                        'id' => $this->product->id,
+                        'name' => $this->product->name,
+                        'price' => $this->product->price
                     ]
                 ]);
     }
 
     /**
-     * Test product not found
+     * Test product not found.
      *
      * @return void
      */
@@ -130,44 +148,40 @@ class ProductControllerTest extends TestCase
     }
 
     /**
-     * Test product not found
+     * Test updating a product.
      *
      * @return void
      */
     public function test_update_product() {
-        $product = Product::factory()->create([
-            'name'  => 'Test product 1',
-            'price' => 100
-        ]);
-
-        $response = $this->putJson("/api/v1/products/{$product->id}", [
+        $updatedData = [
             'price' => 150
-        ]);
+        ];
+
+        $response = $this->putJson("/api/v1/products/{$this->product->id}", $updatedData);
 
         $response->assertStatus(204);
 
         // Verify the product's price was updated in the database
         $this->assertDatabaseHas('products', [
-            'id' => $product->id,
+            'id' => $this->product->id,
             'price' => 150
         ]);
     }
 
     /**
-     * Test product update failed - validation
+     * Test product update failed - validation.
      *
      * @return void
      */
     public function test_update_product_validation_error() {
-        $product = Product::factory()->create();
-        $response = $this->putJson("/api/v1/products/{$product->id}", []);
+        $response = $this->putJson("/api/v1/products/{$this->product->id}", []);
 
         // Assert the response status is 422 Unprocessable Entity and has validation error
         $response->assertStatus(422)->assertJsonValidationErrors('price');
     }
 
     /**
-     * Test update product not found
+     * Test updating a non-existent product.
      *
      * @return void
      */
@@ -184,24 +198,23 @@ class ProductControllerTest extends TestCase
     }
 
     /**
-     * Test delete product
+     * Test deleting a product.
      *
      * @return void
      */
     public function test_delete_product() {
-        $product  = Product::factory()->create();
-        $response = $this->deleteJson("/api/v1/products/{$product->id}");
+        $response = $this->deleteJson("/api/v1/products/{$this->product->id}");
 
         $response->assertStatus(204);
 
         // Verify the product was deleted from the database
         $this->assertDatabaseMissing('products', [
-            'id' => $product->id
+            'id' => $this->product->id
         ]);
     }
 
     /**
-     * Test delete product not found
+     * Test deleting a non-existent product.
      *
      * @return void
      */
@@ -215,5 +228,4 @@ class ProductControllerTest extends TestCase
                     'message' => 'Product not found'
                 ]);
     }
-
 }
