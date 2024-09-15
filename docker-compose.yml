@@ -1,0 +1,63 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: src/orders-app/Dockerfile
+    ports:
+      - "${FRONTEND_APP_PORT}:8000"
+    environment:
+      - APP_NAME=${FRONTEND_APP_NAME}
+      - APP_ENV=${FRONTEND_APP_ENV}
+      - APP_DEBUG=${FRONTEND_APP_DEBUG}
+      - BACKEND_URL=http://api:${BACKEND_API_PORT}/api/v1
+    volumes:
+      - ./src/orders-app:/var/www
+    networks:
+      - private
+    command: >
+      sh -c "python3 /usr/local/bin/setupenv.py && composer install && php artisan serve --host=0.0.0.0 --port=8000"
+  api:
+    build:
+      context: .
+      dockerfile: src/orders-api/Dockerfile
+    ports:
+      - "${BACKEND_API_PORT}:9005"
+    environment:
+      - APP_NAME=${BACKEND_APP_NAME}
+      - APP_ENV=${BACKEND_APP_ENV}
+      - APP_DEBUG=${BACKEND_APP_DEBUG}
+      - DB_CONNECTION=${BACKEND_DB_CONNECTION}
+      - DB_HOST=${BACKEND_DB_HOST}
+      - DB_PORT=${MYSQL_DB_PORT}
+      - DB_DATABASE=${MYSQL_DATABASE}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - FRONTEND_URL=http://app:${FRONTEND_APP_PORT}
+      - BACKEND_URL=http://api:${BACKEND_API_PORT}
+    volumes:
+      - ./src/orders-api:/var/www
+    depends_on:
+      - db
+    networks:
+      - private
+    command: >
+      sh -c "python3 /usr/local/bin/setupenv.py && composer install && php artisan serve --host=0.0.0.0 --port=9005"
+  db:
+    image: mysql:8.0
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "${MYSQL_DB_PORT}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - private
+      
+networks:
+  private:
+
+volumes:
+  db_data:
