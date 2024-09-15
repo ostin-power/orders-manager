@@ -1,9 +1,15 @@
 # Orders-manager
 System to monitor and manage daily user orders.
 
-# Architecture Overview
+# Architecture
 This architecture supports a clear separation of concerns, with distinct services for the frontend, backend, and database. Docker containers provide isolation, ease of deployment, and flexibility. Environment variables allow configuration to be managed externally, making it adaptable to different environments like development, staging, or production.
 
+### Design
+<div align="center">
+	<img src="./docs/general_architecture_1_0.png">
+</div>
+
+### Overview
 This system architecture is based on Docker containers, which are orchestrated to run a web application with a front-end (app), a back-end API (api), and a MySQL database (db).
 
 Below is a breakdown of each service (docker-compose.yml description):
@@ -41,12 +47,6 @@ All services are part of the private network, ensuring secure, internal communic
 
 #### **Volumes**
 - **db_data**: This named volume is used by the db service **to persist MySQL data** across container restarts. It ensures that database changes are not lost when the container stops or is rebuilt.
-
-
-## Architecture Design
-<div align="center">
-	<img src="./docs/general_architecture_1_0.png">
-</div>
 
 
 ## Project Setup
