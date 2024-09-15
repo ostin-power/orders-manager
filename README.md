@@ -86,7 +86,10 @@ All services are part of the private network, ensuring secure, internal communic
 2. Go to project directory `cd orders-manager/`
 3. In the root directory copy .env.example: `cp .env.example .env`
 4. Change any conf values you need such as ports or db name **(it is advisable to keep the default values)**
-5. Run `docker compose up --build -d`.
+5. Run `docker compose up --build`.
+6. Wait for both app and api services to start: the above command (without the ‘-d’ option for detached) will return the following output:<br>
+    - `INFO  Server running on [http://0.0.0.0:8000]` 
+    - `INFO  Server running on [http://0.0.0.0:9005]`
 6. Run `docker ps` to make sure that application is up&running.
 7. Run `docker exec -it <api-container-name> php artisan migrate:fresh` to run database migrations
 8. Run `docker exec -it <api-container-name> php artisan db:seed` to create fake data to make some tests (not mandatory)
