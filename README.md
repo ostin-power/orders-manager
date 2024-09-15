@@ -149,9 +149,9 @@ Wait for the output. It would be like this:
 	<img src="./docs/tests_results.png">
 </div>
 
-**After test execution clean database by running again the migration and seed commands:** 
+**After test execution database is clean from test-data automatically, to get new data run again the migration and seed commands:** 
 ```bash
-docker exec -it <api-container-name> php artisan migrate:fresh
+docker exec -it <api-container-name> php artisan migrate:fresh #Not mandatory
 docker exec -it <api-container-name> php artisan db:seed
 ```
 
