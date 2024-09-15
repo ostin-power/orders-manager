@@ -1,6 +1,32 @@
 # Orders-manager
 System to monitor and manage daily user orders.
 
+## Table of Contents
+- [Architecture](#architecture)
+  - [Design](#design)
+  - [Overview](#overview)
+  - [Services](#services)
+    - [APP (Frontend Service)](#app-frontend-service)
+    - [API (Backend API Service)](#api-backend-api-service)
+    - [DB (Database Service)](#db-database-service)
+  - [Networks](#networks)
+  - [Volumes](#volumes)
+- [Project Setup](#project-setup)
+  - [Requirements](#requirements)
+  - [Steps to Run the Project](#steps-to-run-the-project)
+- [API Endpoints](#api-endpoints)
+  - [Swagger documentation](#swagger-documentation)
+- [Tests](#tests)
+  - [Prerequisites](#prerequisites)
+  - [Running Tests](#running-tests)
+- [Troubleshooting](#troubleshooting)
+  - [Containers Won't Start or Exit Immediately](#containers-wont-start-or-exit-immediately)
+  - [MySQL Database Fails to Start](#mysql-database-fails-to-start)
+  - [Application (App or API) Cannot Connect to Database](#application-app-or-api-cannot-connect-to-database)
+  - [Unable to Access App or API on Exposed Ports](#unable-to-access-app-or-api-on-exposed-ports)
+  - [Volume Changes Not Reflecting](#volume-changes-not-reflecting)
+
+
 # Architecture
 This architecture supports a clear separation of concerns, with distinct services for the frontend, backend, and database. Docker containers provide isolation, ease of deployment, and flexibility. Environment variables allow configuration to be managed externally, making it adaptable to different environments like development, staging, or production.
 
