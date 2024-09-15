@@ -20,7 +20,9 @@
 </form>
 
 <script>
+    //Leaving here because moving in js file means reload views and ALL data after form submission.
     $(document).ready(function() {
+        // Update Modal
         $('#updateOrderForm').on('submit', function(e) {
             e.preventDefault();
 
@@ -32,26 +34,24 @@
                 type: 'POST',
                 data: formData,
                 success: function(response) {
+                    location.reload();
                     $('#orderModal').modal('hide');
                     Swal.fire({
                         icon: 'success',
                         title: 'Order Updated',
                         text: 'The order was successfully updated!',
                         showConfirmButton: true
-                    }).then(() => {
-                        location.reload();
                     });
                 },
                 error: function(xhr) {
                     var response = xhr.responseJSON || {};
                     var errorMessage = response.message || 'Failed to update order. Please try again.';
+                    location.reload();
 
                     Swal.fire({
                         icon: 'error',
                         title: 'Failed',
                         text: errorMessage,
-                    }).then(() => {
-                        location.reload();
                     });
                 }
             });
