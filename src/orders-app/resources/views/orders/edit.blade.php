@@ -20,7 +20,9 @@
 </form>
 
 <script>
+    //Leaving here because moving in js file means reload views and ALL data after form submission.
     $(document).ready(function() {
+        // Update Modal
         $('#updateOrderForm').on('submit', function(e) {
             e.preventDefault();
 
