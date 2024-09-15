@@ -10,6 +10,18 @@ class WebOrderControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $_backendUrl;
+
+    /**
+     * Set up the test environment.
+     *
+     * @return void
+     */
+    protected function setUp(): void {
+        parent::setUp();
+        $this->_backendUrl = env('BACKEND_URL', 'http://api:9005/api/v1');
+    }
+
     /**
      * Test the index method.
      *
@@ -32,8 +44,8 @@ class WebOrderControllerTest extends TestCase
         ];
 
         Http::fake([
-            'http://api:9005/api/v1/orders' => Http::response($mockOrders, 200),
-            'http://api:9005/api/v1/products' => Http::response($mockProducts, 200),
+            $this->_backendUrl.'/orders' => Http::response($mockOrders, 200),
+            $this->_backendUrl.'/products' => Http::response($mockProducts, 200),
         ]);
 
         $response = $this->get(route('orders.index'));
@@ -72,7 +84,7 @@ class WebOrderControllerTest extends TestCase
 
         // Mock external API response
         Http::fake([
-            'http://api:9005/api/v1/orders/1' => Http::response($mockOrder, 200),
+            $this->_backendUrl.'/orders/1' => Http::response($mockOrder, 200),
         ]);
 
         // Perform a GET request to the show route
@@ -101,7 +113,7 @@ class WebOrderControllerTest extends TestCase
         ];
 
         Http::fake([
-            'http://api:9005/api/v1/orders/1' => Http::response($mockOrder, 200),
+            $this->_backendUrl.'/orders/1' => Http::response($mockOrder, 200),
         ]);
 
         // Perform a GET request to the edit route
@@ -123,7 +135,7 @@ class WebOrderControllerTest extends TestCase
         $mockResponse = ['message' => 'Order created successfully.'];
 
         Http::fake([
-            'http://api:9005/api/v1/orders' => Http::response($mockResponse, 201),
+            $this->_backendUrl.'/orders' => Http::response($mockResponse, 201),
         ]);
 
         $response = $this->post(route('orders.store'), [
@@ -149,7 +161,7 @@ class WebOrderControllerTest extends TestCase
         // Mock external API response
         $mockResponse = ['success' => true];
         Http::fake([
-            'http://api:9005/api/v1/orders/1' => Http::response($mockResponse, 200),
+            $this->_backendUrl.'/orders/1' => Http::response($mockResponse, 200),
         ]);
 
         $response = $this->put(route('orders.update', ['id' => 1]), [
@@ -170,7 +182,7 @@ class WebOrderControllerTest extends TestCase
     public function test_delete_order() {
         // Mock external API response
         Http::fake([
-            'http://api:9005/api/v1/orders/1' => Http::response(null, 204),
+            $this->_backendUrl.'/orders/1' => Http::response(null, 204),
         ]);
 
         $response = $this->delete(route('orders.delete', ['id' => 1]), [], ['X-CSRF-TOKEN' => csrf_token()]);
