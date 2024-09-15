@@ -83,13 +83,14 @@ All services are part of the private network, ensuring secure, internal communic
 
 ### Steps to Run the Project:
 1. Clone the repository: `git clone https://github.com/ostin-power/orders-manager.git`
-2. In the root directory copy .env.example: `cp .env.example .env`
-3. Change any conf values you need such as ports or db name **(it is advisable to keep the default values)**
-2. Run `docker compose up --build -d`.
-3. Run `docker ps` to make sure that application is up&running.
-4. Run `docker exec -it <api-container-name> php artisan migrate:fresh` to run database migrations
-5. Run `docker exec -it <api-container-name> php artisan db:seed` to create fake data to make some tests (not mandatory)
-6. Access the API at `localhost:<BACKEND_API_PORT>/api/v1/` (see Swagger documentation below) and the frontend at `localhost:<FRONTEND_APP_PORT>`. Ports values are specified inside .env file.
+2. Go to project directory `cd orders-manager/`
+3. In the root directory copy .env.example: `cp .env.example .env`
+4. Change any conf values you need such as ports or db name **(it is advisable to keep the default values)**
+5. Run `docker compose up --build -d`.
+6. Run `docker ps` to make sure that application is up&running.
+7. Run `docker exec -it <api-container-name> php artisan migrate:fresh` to run database migrations
+8. Run `docker exec -it <api-container-name> php artisan db:seed` to create fake data to make some tests (not mandatory)
+9. Access the API at `localhost:<BACKEND_API_PORT>/api/v1/` (see Swagger documentation below) and the frontend at `localhost:<FRONTEND_APP_PORT>`. Ports values are specified inside .env file.
 
 ## API Endpoints:
 - `GET /api/v1/orders`: Fetch all orders with optional filters.
@@ -145,7 +146,7 @@ Wait for the output. It would be like this:
 	<img src="./docs/tests_results.png">
 </div>
 
-**After test execution, if you want clean database, run again the database seed to clean data:** 
+**After test execution clean database by running again the migration and seed commands:** 
 ```bash
 docker exec -it <api-container-name> php artisan migrate:fresh
 docker exec -it <api-container-name> php artisan db:seed
