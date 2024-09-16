@@ -17,6 +17,8 @@ System to monitor and manage daily user orders.
 - [API Endpoints](#api-endpoints)
   - [Swagger documentation](#swagger-documentation)
 - [Tests](#tests)
+  - [Coverage](#coverage)
+  - [Scripts](#scripts)
   - [Prerequisites](#prerequisites)
   - [Running Tests](#running-tests)
 - [Troubleshooting](#troubleshooting)
