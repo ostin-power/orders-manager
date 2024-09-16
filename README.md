@@ -115,6 +115,23 @@ http://localhost:<BACKEND_API_PORT>/api/documentation
 
 
 ## Tests
+
+### Coverage
+- Order/product Creation: simulate the process of creating an order and check if the data is correctly saved in the database.
+- Order/product Update/Deletion: test functionality of updating and deleting orders/product. These tests ensure that data is modified and removed as expected.
+- APIs: ensures that all routes respond with the correct status codes and data structures. For example, testing the order API endpoints to ensure they return the correct response when queried.
+- Validation: ensure that invalid order data is handled correctly (e.g., when required fields are missing or contain invalid values).
+
+### Scripts
+1. APP tests
+	- Unit: src/orders-app/tests/Unit/BaseAppTest.php
+	- Feature: src/orders-app/tests/Feature/WebOrderControllerTest.php
+	- Feature: src/orders-app/tests/Feature/WebProductControllerTest.php
+2. APIs tests
+	- Unit: src/orders-api/tests/Unit/BaseAppTest.php
+	- Feature: src/orders-api/tests/Feature/OrderControllerTest.php
+	- Feature: src/orders-api/tests/Feature/ProductControllerTest.php
+
 ### Prerequisites
 Before running the tests, ensure that all the required dependencies and Docker containers are running. You will need:
 
