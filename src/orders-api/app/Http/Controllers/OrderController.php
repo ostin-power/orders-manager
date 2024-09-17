@@ -181,6 +181,23 @@ class OrderController extends Controller {
      *         )
      *     ),
      *     @OA\Response(
+     *          response=422,
+     *          description="Validation error: name field must be a string.",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The name field must be a string."
+     *              ),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="name", type="array",
+     *                      @OA\Items(type="string",example="The name field must be a string.")
+     *                  )
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
      *         response="500",
      *         description="Order creation failed",
      *         @OA\JsonContent(
@@ -384,6 +401,23 @@ class OrderController extends Controller {
      *             @OA\Property(property="code", type="integer", example=404),
      *             @OA\Property(property="message", type="string", example="Order not found")
      *         )
+     *     ),
+     *     @OA\Response(
+     *          response=422,
+     *          description="Validation error: name field must be a string.",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The name field must be a string."
+     *              ),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="name", type="array",
+     *                      @OA\Items(type="string",example="The name field must be a string.")
+     *                  )
+     *              )
+     *          )
      *     ),
      *     @OA\Response(
      *         response="500",

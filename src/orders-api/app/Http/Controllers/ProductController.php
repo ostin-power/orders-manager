@@ -81,6 +81,23 @@ class ProductController extends Controller {
      *         )
      *     ),
      *     @OA\Response(
+     *          response=422,
+     *          description="Validation error: price field must be an integer.",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(
+     *                  property="message",
+     *                  type="string",
+     *                  example="The price field must be an integer."
+     *              ),
+     *              @OA\Property(property="errors", type="object",
+     *                  @OA\Property(property="price", type="array",
+     *                      @OA\Items(type="string",example="The price field must be an integer.")
+     *                  )
+     *              )
+     *          )
+     *     ),
+     *     @OA\Response(
      *         response=500,
      *         description="Product creation failed",
      *         @OA\JsonContent(
